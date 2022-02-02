@@ -1,0 +1,37 @@
+---
+- name: Install Apache WebServer
+  hosts: nodes
+  become: yes
+
+  vars:
+    source_file: ./MyWebSite/index.html
+    destin_file: /var/www/html/
+  
+  tasks:
+  - name: Install Apache WebServer
+    yum: name=httpd state=present
+  
+  - name: Copy MyWebPage to Servers
+    copy: src={{ source_file }} dest={{ destin_file }} mode=0555
+    notify: Restart Apache
+
+  - name: Start Apache and Enable it
+    service: name=httpd state=started enabled=yes
+
+  - name: Open http port
+    firewalld:
+      port: 80/tcp
+      permanent: true
+      state: enabled
+
+  - name: Open https service
+    firewalld:
+      service: https
+      permanent: true
+      state: enabled    
+  
+  handlers:
+  - name: Restart Apache
+    service: name=httpd state=restarted
+ 
+ 
