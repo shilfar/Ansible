@@ -1,0 +1,46 @@
+---
+- name: Check Grub
+  hosts: nodes
+  become: yes
+
+
+  tasks:
+  - name: Check if net.ifnames exists
+    lineinfile:
+      backup: true
+      path: /etc/default/grub
+      regexp: '^(GRUB_CMDLINE_LINUX.*net\.ifnames\=0.*\")$'
+      state: absent
+    check_mode: true
+    register: grub_check_ifnames
+    changed_when: false
+
+  - name: Insert net.ifnames if it doesn`t exist
+    lineinfile: 
+      backrefs: true
+      path: /etc/default/grub
+      regexp: '^(GRUB_CMDLINE_LINUX.*)\"$'
+      line: '\1 net.ifnames=0"'
+    when: grub_check_ifnames.found == 0
+
+  - name: Check if biosdevname exists
+    lineinfile:
+      backup: true
+      path: /etc/default/grub
+      regexp: '^(GRUB_CMDLINE_LINUX.*biosdevname\=0.*\")$'
+      state: absent
+    check_mode: true
+    register: grub_check_ifnames
+    changed_when: false
+
+  - name: Insert biosdevname if it doesn`t exist
+    lineinfile:
+      backrefs: true
+      path: /etc/default/grub
+      regexp: '^(GRUB_CMDLINE_LINUX.*)\"$'
+      line: '\1 biosdevname=0"'
+    when: grub_check_ifnames.found == 0
+
+
+ 
+ 

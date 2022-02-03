@@ -1,0 +1,24 @@
+---
+- name: Delete Apache WebServer
+  hosts: nodes
+  become: yes
+
+ 
+  tasks:
+  - name: Delete Apache WebServer
+    yum: name=httpd state=absent
+  
+  - name: Delete index.html from Servers
+    file:
+      path: /var/www/html/index.html
+      state: absent
+
+  - name: Close http port
+    firewalld:
+      port: 80/tcp
+      permanent: true
+      state: disabled    
+  
+
+ 
+ 
