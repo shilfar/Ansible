@@ -1,0 +1,17 @@
+---
+- name: Create Users from file
+  hosts: nodes
+  become: yes
+
+  vars_files:
+    - secret.yml
+
+  tasks:
+    - name: Create users
+      user:
+        name: "{{ item.value.username }}"
+        home: "{{ item.value.homedir }}"
+        comment: "{{ item.value.comment }}"
+        password: "{{ item.value.password | password_hash('sha512') }}"
+        state: present
+      with_dict: "{{ users }}"
