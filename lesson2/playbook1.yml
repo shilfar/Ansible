@@ -14,4 +14,5 @@
         comment: "{{ item.value.comment }}"
         password: "{{ item.value.password | password_hash('sha512') }}"
         state: present
+        update_password: on_create
       with_dict: "{{ users }}"
