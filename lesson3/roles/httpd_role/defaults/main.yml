@@ -1,0 +1,5 @@
+---
+# Default files for httpd_role
+ destin_file: /var/www/html/
+#[nodes]
+#node[1:2].example.com

@@ -1,0 +1,20 @@
+---
+# Default files for httpd_role
+remote_dir:    /var/ftp/pub
+remote_dir_up: /var/ftp/pub/upload
+anonymous_enable: yes
+local_enable: yes
+write_enable: yes
+anon_upload_enable: yes
+
+sel_bool_ftpd_anon_write: ftpd_anon_write
+ftpd_anon_write_state: true
+
+package:      vsftpd
+vsftpd_service_state: started
+vsftpd_service_enabled: yes
+mode_pub:     0664
+mode_pub_up:  0666
+
+
+

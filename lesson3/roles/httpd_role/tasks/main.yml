@@ -1,0 +1,21 @@
+---
+# Taskes file for httpd_role
+
+- block: # Block for Redhat machines
+    - name: Install Apache WebServer
+      yum: name=httpd state=present
+    - name: Start Apache and Enable it
+      service: name=httpd state=started enabled=yes
+  when: ansible_os_family == "RedHat"
+
+
+- name: Copy MyWebPage to Servers
+  template: src=index.html dest={{ destin_file }} mode=0555
+  notify: Restart Apache
+
+- name: Open http port
+  firewalld:
+    port: 80/tcp
+    permanent: true
+    state: enabled
+

@@ -1,0 +1,4 @@
+---
+# Default files for httpd_role
+#remote_dir:    /var/ftp/pub
+#remote_dir_up: /var/ftp/pub/upload

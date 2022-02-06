@@ -1,0 +1,7 @@
+---
+- name: Install Apache WebServer
+  hosts: nodes
+  become: yes
+
+  roles:
+    - { role: httpd_role, when: ansible_system == 'Linux' }

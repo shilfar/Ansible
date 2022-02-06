@@ -1,0 +1,7 @@
+---
+- name: Install Apache WebServer
+  hosts: node2.example.com
+  become: yes
+
+  roles:
+    - { role: vsftpd_role, when: ansible_system == 'Linux' }
