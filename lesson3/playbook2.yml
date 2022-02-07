@@ -1,6 +1,6 @@
 ---
 - name: Install Apache WebServer
-  hosts: node2.example.com
+  hosts: nodes
   become: yes
 
   roles:

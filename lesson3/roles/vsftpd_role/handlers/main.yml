@@ -1,5 +1,5 @@
 ---
-- name: Restart vsftpd
+- name: restart vsftpd
   service:
     name: "{{ package }}"
     state: restarted

@@ -14,7 +14,7 @@ package:      vsftpd
 vsftpd_service_state: started
 vsftpd_service_enabled: yes
 mode_pub:     0664
-mode_pub_up:  0666
+mode_pub_up:  0777
 
 
 

@@ -19,66 +19,46 @@
       - python3-libsemanage 
       - python3-policycoreutils
     state: present
-  
 
-#- name: Copy FTP config
-#  template:
-#    src: vsftpd.j2
-#    dest: /etc/vsftpd/vsftpd.conf
-#  notify:
-#    - Restart vsftpd
- 
-#- name: Check if Pub directory exists
-#  stat:
-#    path: "{{ remote_dir }}"
-#    register: output_folder
-
-#- name: Check_Create Pub directory
-#  file:
-#    path: "{{ remote_dir }}"
-#    state: directory
-#    owner: www-data
-#    group: www-data
-#    mode: "{{ mode_pub }}"
-#    recurse: yes
-#  when: output_folder.stat.exists == false
-
-
-#- name: Check if Upload directory exists
-#  stat:
-#    path: "{{ remote_dir_up }}"
-#    register: output_folder
+- name: Copy FTP config
+  template:
+    src: vsftpd.conf
+    dest: /etc/vsftpd/vsftpd.conf
+  notify:
+      - restart vsftpd  
 
 - name: Check_Create Upload directory
   file:
     path: "{{ remote_dir_up }}"
     state: directory
-#    owner: www-data
-#    group: www-data
     mode: "{{ mode_pub_up }}"
     recurse: yes
-#  when: output_folder.stat.exists == false
 
-#- block: # Selinux configuration on machines
-#   - name: Set Selinux boolean for Anonimous FTP upload
-#     seboolean:
-#       name: "{{ sel_bool_ftpd_anon_write }}"
-#       state: "{{ ftpd_anon_write_state }}"
-#       persistent: yes
+- block: # Selinux configuration on machines
+   - name: Set Selinux boolean for Anonimous FTP upload
+     seboolean:
+       name: "{{ sel_bool_ftpd_anon_write }}"
+       state: "{{ ftpd_anon_write_state }}"
+       persistent: yes
 
-#   - name: Set Selinuxfile context for pub
-#     sefcontext:
-#       target: "{{ remote_dir }}"
-#       setype: public_content_rw_t
-#       state: present
-#   - name: Set Selinuxfile context for pub_upload
-#     sefcontext:
-#       target: "{{ remote_dir_up }}"
-#       setype: public_content_rw_t
-#       state: present
-#  when: ansible_os_family == "RedHat"
+   - name: Set Selinuxfile context for pub
+     sefcontext:
+       target: "{{ remote_dir }}"
+       setype: public_content_rw_t
+       state: present
 
-- name: Open http port
+   - name: Set Selinuxfile context for pub_upload
+     sefcontext:
+       target: "{{ remote_dir_up }}"
+       setype: public_content_rw_t
+       state: present
+
+   - name: Apply new file context to filesystem
+     ansible.builtin.command: restorecon -F -R -v /var/ftp/pub/upload
+
+  when: ansible_os_family == "RedHat"
+
+- name: Open ftp port
   firewalld:
     port: 20-21/tcp
     permanent: true
